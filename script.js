@@ -30,8 +30,8 @@ function renderItems(items) {
         if (item.editing) {
             return `
             <li id="itemInnerList" data-index="${index}">
-            <input class="checkbox-input" type="checkbox" data-index-check="${index}" id="item${index}" ${item.done ? 'checked' : ''} />
-            <input id="edit-input" type="text" class="edit-input" data-index="${index}" value="${item.title}" />
+            <input class="checkbox-input" type="checkbox" data-index="${index}" id="item${index}" ${item.done ? 'checked' : ''} />
+            <input id="edit-input" type="text" class="edit-input" data-index="${index}"/>
             <button data-index="${index}" class="save-btn"></button>
             <button class="delete-btn" data-index="${index}"></button>
           </li>
@@ -39,7 +39,7 @@ function renderItems(items) {
         }
         return `
            <li id="itemInnerList" data-index="${index}">
-           <input class="checkbox-input" type="checkbox" data-index-check="${index}" id="item${index}" ${item.done ? 'checked' : ''} />
+           <input class="checkbox-input" type="checkbox" data-index="${index}" id="item${index}" ${item.done ? 'checked' : ''} />
            <span class="text">${item.title}</span>
            <button class="edit-btn" data-index="${index}"></button>
            <button class="delete-btn" data-index="${index}"></button>
@@ -69,7 +69,7 @@ itemsList.addEventListener("click", (event) => {
     }
 })
 
-yesButton.addEventListener("click", (event) => {
+yesButton.addEventListener("click", () => {
     deleteWindow.classList.remove("show");
     deleteWindow.classList.add("hide");
     const index = deleteWindow.getAttribute("data-index");
@@ -91,9 +91,6 @@ cancelButton.addEventListener("click", () => {
     deleteWindow.classList.add("hide");
 });
 
-
-
-
 itemsList.addEventListener("click", (event) => {
 
     const { target } = event;
@@ -101,21 +98,18 @@ itemsList.addEventListener("click", (event) => {
 
     if (target.matches('.edit-btn')) {
         items[index].editing = true;
-
         renderItems(items);
-        updateLocalstorage(items);
+        const editInput = itemsList.querySelector('.edit-input');
+        editInput.value = items[index].title;
     }
-
 
     if (target.matches('.save-btn')) {
-        const input = itemsList.querySelector('.edit-input');
-
+        const editInput = itemsList.querySelector('.edit-input');
         items[index].editing = false;
-        items[index].title = input.value;
-
+        items[index].title = editInput.value;
         renderItems(items);
-        updateLocalstorage(items);
     }
+    updateLocalstorage(items);
 });
 
 
